@@ -1,0 +1,77 @@
+Hi,
+
+Please find today video https://youtu.be/MCak6TTz9Js
+
+Please find attached datasets. worldbank. Try to convert this 
+complicated structure data to normal structured data. or store this data 
+as a csv format.
+
+If you can't atleast try to create table table in hive using zips.json 
+finally store this data as csv format.
+
+Second task)
+
+Download data from: 
+https://www.kaggle.com/shrutimehta/zomato-restaurants-data
+
+Now tell me how many very good rating, good rating avg ... in this way 
+group those ratings. you can do it using rdd or dataframe or hive .. ur 
+wish all the best.
+
+
+if you can do it within sunday evening ill give a surprise offer/gift
+
+all the best. send code
+
+If you dont have sql knowledge please follow this youtube video 
+https://youtu.be/ws958zzyowE
+
+don't terminate/delete any tables;
+
+Host:
+
+jdbc:oracle:thin://@oracledb.cotidg8mtnrt.ap-south-1.rds.amazonaws.com:1521/ORCL
+
+username: ousername
+
+password: opassword
+
+So all the best for ur bright future.
+
+
+jdbc:mysql://nn01.itversity.com:3306/retail_db \
+--username retail_dba 
+--password itversity 
+
+
+sqoop eval \
+  --connect jdbc:mysql://nn01.itversity.com:3306/retail_export \
+  --username retail_dba \
+  --password itversity \
+--query "show databases"
+
+
+
+
+
+mysql -u retail_dba -h nn01.itversity.com -p
+password : itversity
+
+
+use retail_db;
+
+select * from orders limit 10;
+select count(*) from orders ;
+select count(*) from customers ;
+
+data present locally at : /home/cloudera/data/retail_db
+data present at hdfs at : /user/rajeshs/sqoop_import_all/retail_db
+
+sqoop import \
+  --connect jdbc:mysql://nn01.itversity.com:3306/retail_db \
+  --username retail_dba \
+  --password itversity \
+  --table order_items \
+  --target-dir /user/rajeshs/sqoop_import/retail_db/order_items
+
+Outout :  
