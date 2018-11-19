@@ -5,3 +5,418 @@ converting to local hdfs:///user/rajeshs/jars_location/json-serde-1.3.6-jar-with
 Added [/tmp/a0dbd6d8-3492-485c-a96a-370779590c9d_resources/json-serde-1.3.6-jar-with-dependencies.jar] to class path
 Added resources: [hdfs:///user/rajeshs/jars_location/json-serde-1.3.6-jar-with-dependencies.jar]
 hive (rajeshs_task_db)>
+
+export SPARK_MAJOR_VERSION=2
+spark-shell --master yarn --conf spark.ui.port=12229 --packages com.databricks:spark-avro_2.10:2.0.1
+
+
+scala> val worldBankJSonDFsample  = spark.read.json(spark.sparkContext.wholeTextFiles("/user/rajeshs/datasets/sampleWorldBank.json").values)
+warning: there was one deprecation warning; re-run with -deprecation for details
+worldBankJSonDFsample: org.apache.spark.sql.DataFrame = [_id: struct<$oid: string>, approvalfy: bigint ... 48 more fields]
+
+scala> worldBankJSonDFsample.printSchema
+root
+ |-- _id: struct (nullable = true)
+ |    |-- $oid: string (nullable = true)
+ |-- approvalfy: long (nullable = true)
+ |-- board_approval_month: string (nullable = true)
+ |-- boardapprovaldate: string (nullable = true)
+ |-- borrower: string (nullable = true)
+ |-- closingdate: string (nullable = true)
+ |-- country_namecode: string (nullable = true)
+ |-- countrycode: string (nullable = true)
+ |-- countryname: string (nullable = true)
+ |-- countryshortname: string (nullable = true)
+ |-- docty: string (nullable = true)
+ |-- envassesmentcategorycode: string (nullable = true)
+ |-- grantamt: long (nullable = true)
+ |-- ibrdcommamt: long (nullable = true)
+ |-- id: string (nullable = true)
+ |-- idacommamt: long (nullable = true)
+ |-- impagency: string (nullable = true)
+ |-- lendinginstr: string (nullable = true)
+ |-- lendinginstrtype: string (nullable = true)
+ |-- lendprojectcost: long (nullable = true)
+ |-- majorsector_percent: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- Name: string (nullable = true)
+ |    |    |-- Percent: long (nullable = true)
+ |-- mjsector_namecode: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- code: string (nullable = true)
+ |    |    |-- name: string (nullable = true)
+ |-- mjtheme: array (nullable = true)
+ |    |-- element: string (containsNull = true)
+ |-- mjtheme_namecode: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- code: string (nullable = true)
+ |    |    |-- name: string (nullable = true)
+ |-- mjthemecode: string (nullable = true)
+ |-- prodline: string (nullable = true)
+ |-- prodlinetext: string (nullable = true)
+ |-- productlinetype: string (nullable = true)
+ |-- project_abstract: struct (nullable = true)
+ |    |-- cdata: string (nullable = true)
+ |-- project_name: string (nullable = true)
+ |-- projectdocs: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- DocDate: string (nullable = true)
+ |    |    |-- DocType: string (nullable = true)
+ |    |    |-- DocTypeDesc: string (nullable = true)
+ |    |    |-- DocURL: string (nullable = true)
+ |    |    |-- EntityID: string (nullable = true)
+ |-- projectfinancialtype: string (nullable = true)
+ |-- projectstatusdisplay: string (nullable = true)
+ |-- regionname: string (nullable = true)
+ |-- sector: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- Name: string (nullable = true)
+ |-- sector1: struct (nullable = true)
+ |    |-- Name: string (nullable = true)
+ |    |-- Percent: long (nullable = true)
+ |-- sector2: struct (nullable = true)
+ |    |-- Name: string (nullable = true)
+ |    |-- Percent: long (nullable = true)
+ |-- sector3: struct (nullable = true)
+ |    |-- Name: string (nullable = true)
+ |    |-- Percent: long (nullable = true)
+ |-- sector4: struct (nullable = true)
+ |    |-- Name: string (nullable = true)
+ |    |-- Percent: long (nullable = true)
+ |-- sector_namecode: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- code: string (nullable = true)
+ |    |    |-- name: string (nullable = true)
+ |-- sectorcode: string (nullable = true)
+ |-- source: string (nullable = true)
+ |-- status: string (nullable = true)
+ |-- supplementprojectflg: string (nullable = true)
+ |-- theme1: struct (nullable = true)
+ |    |-- Name: string (nullable = true)
+ |    |-- Percent: long (nullable = true)
+ |-- theme_namecode: array (nullable = true)
+ |    |-- element: struct (containsNull = true)
+ |    |    |-- code: string (nullable = true)
+ |    |    |-- name: string (nullable = true)
+ |-- themecode: string (nullable = true)
+ |-- totalamt: long (nullable = true)
+ |-- totalcommamt: long (nullable = true)
+ |-- url: string (nullable = true)
+
+
+scala>
+scala> import com.databricks.spark.avro._
+import com.databricks.spark.avro._
+
+scala> worldBankJSonDFsample.write.avro("/user/rajeshs/datasets/")
+
+worldBankJSonDFsample.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets")
+
+scala> worldBankJSonDFsample.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets")
+java.lang.ClassNotFoundException: org.apache.spark.sql.sources.HadoopFsRelationProvider was removed in Spark 2.0. Please check if your library is compatible with Spark 2.0
+  at org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:646)
+  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:241)
+  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:225)
+  ... 53 elided
+Caused by: java.lang.NoClassDefFoundError: org/apache/spark/sql/sources/HadoopFsRelationProvider
+
+
+
+export SPARK_MAJOR_VERSION=2
+spark-shell --master yarn --conf spark.ui.port=12229 --packages com.databricks:spark-avro_2.10:3.0.1
+
+
+scala> worldBankJSonDFsample.write.avro("/user/rajeshs/datasets/")
+18/11/19 12:34:38 WARN Utils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.debug.maxToStringFields' in SparkEnv.conf.
+org.apache.spark.sql.AnalysisException: path hdfs://nn01.itversity.com:8020/user/rajeshs/datasets already exists.;
+
+
+
+scala> worldBankJSonDFsample.write.avro("/user/rajeshs/datasets/ConvertjsonToAvro")
+org.apache.avro.SchemaParseException: Illegal initial character: $oid
+
+
+
+ // changed $oid to oid in /user/rajeshs/datasets/cleansampleWorldBank.json //
+ 
+ 
+  val worldBankJSonDFsampleC  = spark.read.json(spark.sparkContext.wholeTextFiles("/user/rajeshs/datasets/sampleWorldBankClean.json").values)
+
+ 
+ 
+ worldBankJSonDFsampleC.write.avro("/user/rajeshs/datasets/injsontoavroFolder")
+
+ 
+
+worldBankJSonDFsampleC.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets")
+
+scala> import org.apache.spark.SparkConf
+import org.apache.spark.SparkConf
+
+scala> val conf = new SparkConf
+conf: org.apache.spark.SparkConf = org.apache.spark.SparkConf@54132c2f
+
+scala> conf.set("spark.speculation","false")
+res25: org.apache.spark.SparkConf = org.apache.spark.SparkConf@54132c2f
+
+conf.set("spark.speculation","true")
+ // no change in error with speculation value.
+ 
+
+scala> worldBankJSonDFsampleC.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets/tempfolder")
+18/11/19 13:19:33 WARN TaskSetManager: Lost task 0.0 in stage 16.0 (TID 37, wn04.itversity.com, executor 4): org.apache.spark.SparkException: Task failed while writing rows.
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+        at org.apache.spark.scheduler.Task.run(Task.scala:109)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+
+		
+		
+		/***************************************************ERROR***************************************************/
+		
+		
+		
+		worldBankJSonDFsampleC.write.avro("/user/rajeshs/datasets/jsonToAvro") or worldBankJSonDFsampleC.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets/jsonToAvro")
+		
+		scala> worldBankJSonDFsampleC.write.format("com.databricks.spark.avro").save("/user/rajeshs/datasets/jsonToavr1")
+18/11/19 13:22:44 WARN TaskSetManager: Lost task 0.0 in stage 19.0 (TID 49, wn04.itversity.com, executor 4): org.apache.spark.SparkException: Task failed while writing rows.
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+        at org.apache.spark.scheduler.Task.run(Task.scala:109)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.execute(FileFormatWriter.scala:378)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:269)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:267)
+        at org.apache.spark.util.Utils$.tryWithSafeFinallyAndFailureCallbacks(Utils.scala:1411)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:272)
+        ... 8 more
+
+18/11/19 13:22:44 ERROR TaskSetManager: Task 0 in stage 19.0 failed 4 times; aborting job
+18/11/19 13:22:44 ERROR FileFormatWriter: Aborting job null.
+org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 19.0 failed 4 times, most recent failure: Lost task 0.3 in stage 19.0 (TID 52, wn04.itversity.com, executor 4): org.apache.spark.SparkException: Task failed while writing rows.
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+        at org.apache.spark.scheduler.Task.run(Task.scala:109)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.execute(FileFormatWriter.scala:378)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:269)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:267)
+        at org.apache.spark.util.Utils$.tryWithSafeFinallyAndFailureCallbacks(Utils.scala:1411)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:272)
+        ... 8 more
+
+Driver stacktrace:
+        at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1599)
+        at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1587)
+        at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1586)
+        at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+        at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+        at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1586)
+        at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+        at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+        at scala.Option.foreach(Option.scala:257)
+        at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:831)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1820)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1769)
+        at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1758)
+        at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
+        at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:642)
+        at org.apache.spark.SparkContext.runJob(SparkContext.scala:2034)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:194)
+        at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:154)
+        at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:104)
+        at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:102)
+        at org.apache.spark.sql.execution.command.DataWritingCommandExec.doExecute(commands.scala:122)
+        at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:131)
+        at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:127)
+        at org.apache.spark.sql.execution.SparkPlan$$anonfun$executeQuery$1.apply(SparkPlan.scala:155)
+        at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+        at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:152)
+        at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:127)
+        at org.apache.spark.sql.execution.QueryExecution.toRdd$lzycompute(QueryExecution.scala:80)
+        at org.apache.spark.sql.execution.QueryExecution.toRdd(QueryExecution.scala:80)
+        at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+        at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+        at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:77)
+        at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:654)
+        at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:273)
+        at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:267)
+        at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:225)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw.<init>(<console>:30)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw.<init>(<console>:35)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw$$iw$$iw$$iw.<init>(<console>:37)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw$$iw$$iw.<init>(<console>:39)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw$$iw.<init>(<console>:41)
+        at $line126.$read$$iw$$iw$$iw$$iw$$iw.<init>(<console>:43)
+        at $line126.$read$$iw$$iw$$iw$$iw.<init>(<console>:45)
+        at $line126.$read$$iw$$iw$$iw.<init>(<console>:47)
+        at $line126.$read$$iw$$iw.<init>(<console>:49)
+        at $line126.$read$$iw.<init>(<console>:51)
+        at $line126.$read.<init>(<console>:53)
+        at $line126.$read$.<init>(<console>:57)
+        at $line126.$read$.<clinit>(<console>)
+        at $line126.$eval$.$print$lzycompute(<console>:7)
+        at $line126.$eval$.$print(<console>:6)
+        at $line126.$eval.$print(<console>)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at scala.tools.nsc.interpreter.IMain$ReadEvalPrint.call(IMain.scala:786)
+        at scala.tools.nsc.interpreter.IMain$Request.loadAndRun(IMain.scala:1047)
+        at scala.tools.nsc.interpreter.IMain$WrappedRequest$$anonfun$loadAndRunReq$1.apply(IMain.scala:638)
+        at scala.tools.nsc.interpreter.IMain$WrappedRequest$$anonfun$loadAndRunReq$1.apply(IMain.scala:637)
+        at scala.reflect.internal.util.ScalaClassLoader$class.asContext(ScalaClassLoader.scala:31)
+        at scala.reflect.internal.util.AbstractFileClassLoader.asContext(AbstractFileClassLoader.scala:19)
+        at scala.tools.nsc.interpreter.IMain$WrappedRequest.loadAndRunReq(IMain.scala:637)
+        at scala.tools.nsc.interpreter.IMain.interpret(IMain.scala:569)
+        at scala.tools.nsc.interpreter.IMain.interpret(IMain.scala:565)
+        at scala.tools.nsc.interpreter.ILoop.interpretStartingWith(ILoop.scala:807)
+        at scala.tools.nsc.interpreter.ILoop.command(ILoop.scala:681)
+        at scala.tools.nsc.interpreter.ILoop.processLine(ILoop.scala:395)
+        at scala.tools.nsc.interpreter.ILoop.loop(ILoop.scala:415)
+        at scala.tools.nsc.interpreter.ILoop$$anonfun$process$1.apply$mcZ$sp(ILoop.scala:923)
+        at scala.tools.nsc.interpreter.ILoop$$anonfun$process$1.apply(ILoop.scala:909)
+        at scala.tools.nsc.interpreter.ILoop$$anonfun$process$1.apply(ILoop.scala:909)
+        at scala.reflect.internal.util.ScalaClassLoader$.savingContextLoader(ScalaClassLoader.scala:97)
+        at scala.tools.nsc.interpreter.ILoop.process(ILoop.scala:909)
+        at org.apache.spark.repl.Main$.doMain(Main.scala:76)
+        at org.apache.spark.repl.Main$.main(Main.scala:56)
+        at org.apache.spark.repl.Main.main(Main.scala)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at org.apache.spark.deploy.JavaMainApplication.start(SparkApplication.scala:52)
+        at org.apache.spark.deploy.SparkSubmit$.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:906)
+        at org.apache.spark.deploy.SparkSubmit$.doRunMain$1(SparkSubmit.scala:197)
+        at org.apache.spark.deploy.SparkSubmit$.submit(SparkSubmit.scala:227)
+        at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:136)
+        at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+Caused by: org.apache.spark.SparkException: Task failed while writing rows.
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+        at org.apache.spark.scheduler.Task.run(Task.scala:109)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.execute(FileFormatWriter.scala:378)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:269)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:267)
+        at org.apache.spark.util.Utils$.tryWithSafeFinallyAndFailureCallbacks(Utils.scala:1411)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:272)
+        ... 8 more
+org.apache.spark.SparkException: Job aborted.
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:224)
+  at org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.run(InsertIntoHadoopFsRelationCommand.scala:154)
+  at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult$lzycompute(commands.scala:104)
+  at org.apache.spark.sql.execution.command.DataWritingCommandExec.sideEffectResult(commands.scala:102)
+  at org.apache.spark.sql.execution.command.DataWritingCommandExec.doExecute(commands.scala:122)
+  at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:131)
+  at org.apache.spark.sql.execution.SparkPlan$$anonfun$execute$1.apply(SparkPlan.scala:127)
+  at org.apache.spark.sql.execution.SparkPlan$$anonfun$executeQuery$1.apply(SparkPlan.scala:155)
+  at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+  at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:152)
+  at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:127)
+  at org.apache.spark.sql.execution.QueryExecution.toRdd$lzycompute(QueryExecution.scala:80)
+  at org.apache.spark.sql.execution.QueryExecution.toRdd(QueryExecution.scala:80)
+  at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+  at org.apache.spark.sql.DataFrameWriter$$anonfun$runCommand$1.apply(DataFrameWriter.scala:654)
+  at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:77)
+  at org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:654)
+  at org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:273)
+  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:267)
+  at org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:225)
+  ... 51 elided
+Caused by: org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 19.0 failed 4 times, most recent failure: Lost task 0.3 in stage 19.0 (TID 52, wn04.itversity.com, executor 4): org.apache.spark.SparkException: Task failed while writing rows.
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+        at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+        at org.apache.spark.scheduler.Task.run(Task.scala:109)
+        at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+        at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.execute(FileFormatWriter.scala:378)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:269)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:267)
+        at org.apache.spark.util.Utils$.tryWithSafeFinallyAndFailureCallbacks(Utils.scala:1411)
+        at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:272)
+        ... 8 more
+
+Driver stacktrace:
+  at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1599)
+  at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1587)
+  at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1586)
+  at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+  at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+  at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1586)
+  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+  at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:831)
+  at scala.Option.foreach(Option.scala:257)
+  at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:831)
+  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1820)
+  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1769)
+  at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1758)
+  at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
+  at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:642)
+  at org.apache.spark.SparkContext.runJob(SparkContext.scala:2034)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$.write(FileFormatWriter.scala:194)
+  ... 70 more
+Caused by: org.apache.spark.SparkException: Task failed while writing rows.
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:285)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:197)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$write$1.apply(FileFormatWriter.scala:196)
+  at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+  at org.apache.spark.scheduler.Task.run(Task.scala:109)
+  at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:345)
+  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+  at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.AbstractMethodError: org.apache.spark.sql.execution.datasources.OutputWriterFactory.getFileExtension(Lorg/apache/hadoop/mapreduce/TaskAttemptContext;)Ljava/lang/String;
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.newOutputWriter(FileFormatWriter.scala:361)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$SingleDirectoryWriteTask.execute(FileFormatWriter.scala:378)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:269)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$$anonfun$org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask$3.apply(FileFormatWriter.scala:267)
+  at org.apache.spark.util.Utils$.tryWithSafeFinallyAndFailureCallbacks(Utils.scala:1411)
+  at org.apache.spark.sql.execution.datasources.FileFormatWriter$.org$apache$spark$sql$execution$datasources$FileFormatWriter$$executeTask(FileFormatWriter.scala:272)
+  ... 8 more
+
+
+  
+https://github.com/databricks/spark-avro/issues/208  
+ how to get this working with Spark 2.3.0? 
+
+ / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.3.0.2.6.5.0-292
+      /_/
